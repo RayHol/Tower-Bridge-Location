@@ -45,9 +45,11 @@ var setMedia = function (mediaItem, entity) {
         entity.setAttribute('rotation', mediaItem.rotation);
     }
 
+    // Using a-plane for both images and videos
     if (mediaItem.type === 'image') {
         entity.setAttribute('material', `src: ${mediaItem.url}`);
     } else if (mediaItem.type === 'video') {
+        // Create a video element and set it as the source for the texture
         let video = document.createElement('video');
         video.src = mediaItem.url;
         video.setAttribute('autoplay', 'true');
@@ -55,15 +57,14 @@ var setMedia = function (mediaItem, entity) {
         video.setAttribute('playsinline', 'true'); // Important for iOS
         video.load(); // Ensure the video loads
 
-        // Correcting THREE reference for A-Frame
-        let texture = new AFRAME.THREE.VideoTexture(video);
-        entity.setAttribute('material', `src: ${texture}`);
-        entity.setAttribute('geometry', 'primitive: plane; height: 4; width: 4'); // Adjust geometry as needed
+        // Set the video element on the entity using a-plane
+        entity.setAttribute('material', `src: ${video.src};`);
     }
 
     const div = document.querySelector('.instructions');
     div.innerText = mediaItem.info;
 };
+
 
 function renderPlaces(places) {
     let scene = document.querySelector('a-scene');
@@ -72,13 +73,8 @@ function renderPlaces(places) {
         let latitude = place.location.lat;
         let longitude = place.location.lng;
 
-        let entity;
-        if (media[modelIndex].type === 'image') {
-            entity = document.createElement('a-image');
-        } else if (media[modelIndex].type === 'video') {
-            entity = document.createElement('a-entity');
-        }
-
+        // Always create an a-plane for each media item
+        let entity = document.createElement('a-plane');
         entity.setAttribute('gps-entity-place', `latitude: ${latitude}; longitude: ${longitude};`);
 
         setMedia(media[modelIndex], entity);
@@ -93,3 +89,4 @@ function renderPlaces(places) {
         scene.appendChild(entity);
     });
 }
+
