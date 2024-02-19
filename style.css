@@ -31,5 +31,8 @@ button {
     top: 5%;
     font-size: 1.25em;
     color: white;
+    font-family:'Poppins' , sans-serif;
+    font-style: normal;
+    font-weight: 500;
     z-index: 999999;
 }

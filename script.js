@@ -10,10 +10,24 @@ window.onload = () => {
 function staticLoadPlaces() {
     return [
         {
-            name: 'TowerBridge',
+            name: 'Home',
             location: {
-                lat: 55.747960,
-                lng: -4.643990, 
+                lat: 55.74805,
+                lng: -4.64379, 
+            },
+        },
+        {
+              name: 'Sommerset',
+              location: {
+                  lat: 51.51108,
+                  lng: -0.11715, 
+              },
+          },
+        {
+            name: 'TowrrBridge',
+            location: {
+                lat: 51.505151,
+                lng: -0.075699, 
             },
         },
     ];
@@ -22,15 +36,15 @@ var modelIndex = 0;
 var media = [
     {
         type: 'image',
-        url: './assets/Image1.jpg',
-        scale: '5 5 5', // Adjust scale as needed
-        rotation: '0 100 0', // Adjust rotation as needed
+        url: './assets/Image 1.jpg',
+        scale: '12 9 1', // Adjust scale as needed
+        rotation: '0 180 0', // Adjust rotation as needed
         info: 'Image description here',
     },
     {
         type: 'video',
-        url: './assets/video1.mp4',
-        scale: '5 5 5', // Adjust scale as needed
+        url: './assets/Video1.mp4',
+        scale: '12 9 1', // Adjust scale as needed
         rotation: '0 180 0', // Adjust rotation as needed
         info: 'Video description here',
     },
@@ -68,6 +82,7 @@ var setMedia = function (mediaItem, entity) {
 
 function renderPlaces(places) {
     let scene = document.querySelector('a-scene');
+    
 
     places.forEach((place) => {
         let latitude = place.location.lat;
