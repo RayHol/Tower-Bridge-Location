@@ -10,7 +10,7 @@ window.onload = () => {
 function staticLoadPlaces() {
     return [
         {
-            name: 'Pokèmon',
+            name: 'TowerBridge',
             location: {
                 lat: 55.747960,
                 lng: -4.643990, 
@@ -22,9 +22,9 @@ var modelIndex = 0;
 var media = [
     {
         type: 'image',
-        url: './assets/image1.jpg',
+        url: './assets/Image1.jpg',
         scale: '5 5 5', // Adjust scale as needed
-        rotation: '0 180 0', // Adjust rotation as needed
+        rotation: '0 100 0', // Adjust rotation as needed
         info: 'Image description here',
     },
     {
