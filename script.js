@@ -12,53 +12,57 @@ function staticLoadPlaces() {
         {
             name: 'Pokèmon',
             location: {
-                // decomment the following and add coordinates:
-                // lat: <your-latitude>,
-                // lng: <your-longitude>,
+                lat: 55.747960,
+                lng: -4.643990, 
             },
         },
     ];
 }
-
-var models = [
+var modelIndex = 0;
+var media = [
     {
-        url: './assets/magnemite/scene.gltf',
-        scale: '0.5 0.5 0.5',
-        info: 'Magnemite, Lv. 5, HP 10/10',
-        rotation: '0 180 0',
+        type: 'image',
+        url: './assets/image1.jpg',
+        scale: '5 5 5', // Adjust scale as needed
+        rotation: '0 180 0', // Adjust rotation as needed
+        info: 'Image description here',
     },
     {
-        url: './assets/articuno/scene.gltf',
-        scale: '0.2 0.2 0.2',
-        rotation: '0 180 0',
-        info: 'Articuno, Lv. 80, HP 100/100',
-    },
-    {
-        url: './assets/dragonite/scene.gltf',
-        scale: '0.08 0.08 0.08',
-        rotation: '0 180 0',
-        info: 'Dragonite, Lv. 99, HP 150/150',
+        type: 'video',
+        url: './assets/video1.mp4',
+        scale: '5 5 5', // Adjust scale as needed
+        rotation: '0 180 0', // Adjust rotation as needed
+        info: 'Video description here',
     },
 ];
 
-var modelIndex = 0;
-var setModel = function (model, entity) {
-    if (model.scale) {
-        entity.setAttribute('scale', model.scale);
+var setMedia = function (mediaItem, entity) {
+    if (mediaItem.scale) {
+        entity.setAttribute('scale', mediaItem.scale);
     }
 
-    if (model.rotation) {
-        entity.setAttribute('rotation', model.rotation);
+    if (mediaItem.rotation) {
+        entity.setAttribute('rotation', mediaItem.rotation);
     }
 
-    if (model.position) {
-        entity.setAttribute('position', model.position);
-    }
+    if (mediaItem.type === 'image') {
+        entity.setAttribute('material', `src: ${mediaItem.url}`);
+    } else if (mediaItem.type === 'video') {
+        let video = document.createElement('video');
+        video.src = mediaItem.url;
+        video.setAttribute('autoplay', 'true');
+        video.setAttribute('loop', 'true');
+        video.setAttribute('playsinline', 'true'); // Important for iOS
+        video.load(); // Ensure the video loads
 
-    entity.setAttribute('gltf-model', model.url);
+        // Correcting THREE reference for A-Frame
+        let texture = new AFRAME.THREE.VideoTexture(video);
+        entity.setAttribute('material', `src: ${texture}`);
+        entity.setAttribute('geometry', 'primitive: plane; height: 4; width: 4'); // Adjust geometry as needed
+    }
 
     const div = document.querySelector('.instructions');
-    div.innerText = model.info;
+    div.innerText = mediaItem.info;
 };
 
 function renderPlaces(places) {
@@ -68,20 +72,24 @@ function renderPlaces(places) {
         let latitude = place.location.lat;
         let longitude = place.location.lng;
 
-        let model = document.createElement('a-entity');
-        model.setAttribute('gps-entity-place', `latitude: ${latitude}; longitude: ${longitude};`);
+        let entity;
+        if (media[modelIndex].type === 'image') {
+            entity = document.createElement('a-image');
+        } else if (media[modelIndex].type === 'video') {
+            entity = document.createElement('a-entity');
+        }
 
-        setModel(models[modelIndex], model);
+        entity.setAttribute('gps-entity-place', `latitude: ${latitude}; longitude: ${longitude};`);
 
-        model.setAttribute('animation-mixer', '');
+        setMedia(media[modelIndex], entity);
 
         document.querySelector('button[data-action="change"]').addEventListener('click', function () {
             var entity = document.querySelector('[gps-entity-place]');
             modelIndex++;
-            var newIndex = modelIndex % models.length;
-            setModel(models[newIndex], entity);
+            var newIndex = modelIndex % media.length;
+            setMedia(media[newIndex], entity);
         });
 
-        scene.appendChild(model);
+        scene.appendChild(entity);
     });
 }
